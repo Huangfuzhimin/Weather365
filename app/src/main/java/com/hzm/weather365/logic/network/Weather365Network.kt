@@ -8,7 +8,7 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 object Weather365Network {
-    private val placeService = ServiceCreator.create<PlaceService>()
+    private val placeService = ServiceCreator.create(PlaceService::class.java)
 
     suspend fun searchPlace(query:String) = placeService.searchPlaces(query).await()
 
@@ -27,4 +27,10 @@ object Weather365Network {
             })
         }
     }
+
+    private val weatherService = ServiceCreator.create<WeatherService>()
+
+    suspend fun getDailyWeather(lng:String,lat:String) = weatherService.getDailyWeather(lng,lat).await()
+    suspend fun getRealtimeWeather(lng:String,lat:String) = weatherService.getRealtimeWeather(lng,lat).await()
+
 }
