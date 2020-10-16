@@ -1,22 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<androidx.drawerlayout.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:scrollbars="none"
-    android:overScrollMode="never"
-    android:visibility="invisible"
-    android:id="@+id/weatherLayout">
+    android:layout_width="match_parent"
+    android:id="@+id/drawerLayout">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:id="@+id/swipeRefresh">
 
-        <include layout="@layout/now"/>
-        <include layout="@layout/forecast"/>
-        <include layout="@layout/life_index"/>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:overScrollMode="never"
+            android:visibility="invisible"
+            android:id="@+id/weatherLayout">
 
-    </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-</ScrollView>
+                <include layout="@layout/now"/>
+                <include layout="@layout/forecast"/>
+                <include layout="@layout/life_index"/>
+
+            </LinearLayout>
+
+        </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <FrameLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true">
+
+        <fragment
+            android:name="com.hzm.weather365.ui.place.PlaceFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="25dp"/>
+
+    </FrameLayout>
+</androidx.drawerlayout.widget.DrawerLayout>
+
