@@ -2,7 +2,6 @@ package com.hzm.weather365.ui.weather
 
 import android.content.Context
 import android.graphics.Color
-import android.hardware.input.InputManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
