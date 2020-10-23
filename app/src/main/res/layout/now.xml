@@ -76,6 +76,21 @@
                 android:textColor="#fff"
                 android:textSize="18sp"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="13dp"
+                android:textColor="#fff"
+                android:textSize="18sp"
+                android:text="|"/>
+
+            <TextView
+                android:id="@+id/currentHumidity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="13dp"
+                android:textColor="#fff"
+                android:textSize="18sp"/>
 
         </LinearLayout>
 

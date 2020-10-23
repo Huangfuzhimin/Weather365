@@ -29,10 +29,10 @@ object Repository {
         val placeResponse = Weather365Network.searchPlace(query)
         if (placeResponse.status == "ok"){
             val places = placeResponse.places
-            Log.i("Place","获取place成功${places}")
+//            Log.i("Place","获取place成功${places}")
             Result.success(places)
         } else {
-            Log.i("Place","获取place失败")
+//            Log.i("Place","获取place失败")
             Result.failure(RuntimeException("response tatus is ${placeResponse.status}"))
         }
     }
@@ -45,12 +45,19 @@ object Repository {
             val deferredDaily = async {
                 Weather365Network.getDailyWeather(lng,lat)
             }
+            val deferredHourly = async {
+                Weather365Network.getHourlyWeather(lng,lat)
+            }
             val realtimeResponse = deferredRealtime.await()
             val dailyResponse = deferredDaily.await()
-            if (realtimeResponse.status == "ok" && dailyResponse.status == "ok"){
-                val weather = Weather(realtimeResponse.result.realtime, dailyResponse.result.daily)
+            val hourlyResponse = deferredHourly.await()
+            if (realtimeResponse.status == "ok" && dailyResponse.status == "ok" && hourlyResponse.status == "ok"){
+                val weather = Weather(realtimeResponse.result.realtime,hourlyResponse.result.hourly,
+                    dailyResponse.result.daily)
+                Log.i("Weather","Weather${weather}")
                 Result.success(weather)
             }else{
+                Log.i("Weather","获取天气失败")
                 Result.failure(RuntimeException("realtime response tatus is ${realtimeResponse.status}"+
                 "daily response tatus is ${dailyResponse.status}"))
             }

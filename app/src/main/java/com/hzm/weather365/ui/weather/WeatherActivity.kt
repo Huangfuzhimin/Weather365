@@ -14,18 +14,22 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.hzm.weather365.R
 import com.hzm.weather365.logic.model.Weather
 import kotlinx.android.synthetic.main.activity_weather.*
 import kotlinx.android.synthetic.main.forecast.*
+import kotlinx.android.synthetic.main.hourly_weather.*
 import kotlinx.android.synthetic.main.life_index.*
 import kotlinx.android.synthetic.main.now.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class WeatherActivity : AppCompatActivity() {
 
     val viewModel by lazy { ViewModelProviders.of(this).get(WeatherViewModel::class.java) }
+    private val hourlyInfoList = ArrayList<HourlyAdapter.HourlyItemData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,6 +84,12 @@ class WeatherActivity : AppCompatActivity() {
 
         })
 
+        val layoutManager = LinearLayoutManager(this)
+        layoutManager.orientation = LinearLayoutManager.HORIZONTAL
+        hourlyWeatherRecycler.layoutManager = layoutManager
+//        val adapter = HourlyAdapter(hourlyInfoList)
+//        hourlyWeatherRecycler.adapter = adapter
+
     }
 
     fun refreshWeather(){
@@ -89,15 +99,28 @@ class WeatherActivity : AppCompatActivity() {
 
     private fun shouWeatherInfo(weather: Weather) {
         placeName.text = viewModel.placeName
-
         val realtime = weather.realtime
         val daily = weather.daily
+        val hourly = weather.hourly
+        // 小时天气
+        // 填充hourly_weather.xml布局中数据
+        val hours = hourly.temperature.size
+        // api 提供0-47
+        hourlyInfoList.clear()
+        for (i in 0 until 24){
+            hourlyInfoList.add(HourlyAdapter.HourlyItemData(hourly.temperature[i].datetime,
+                hourly.skycon[i].value, hourly.temperature[i].value))
+        }
+        val adapter = HourlyAdapter(hourlyInfoList)
+        hourlyWeatherRecycler.adapter = adapter
         // 填充now.xml布局中数据
         val currentTempText = "${realtime.temperature.toInt()} ℃"
         currentTemp.text = currentTempText
         currentSky.text = com.hzm.weather365.logic.model.geSky(realtime.skycon).info
         val currentPM25Text = "空气指数 ${realtime.airQuality.aqi.chn.toInt()}"
         currentAQI.text = currentPM25Text
+        val currentHumidityText = "湿度 ${realtime.humidity}"
+        currentHumidity.text = currentHumidityText
         nowLayout.setBackgroundResource(com.hzm.weather365.logic.model.geSky(realtime.skycon).bg)
         // 填充forecast.xml布局中的数据
         forecastLayout.removeAllViews()
